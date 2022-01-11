@@ -12,7 +12,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'first_name', 'last_name', 'email', 'username', 'phone_number', 'address', 'image', 'level','password', 'password_confirmation')
 
     def create(self, validated_data):
-        print("create")
         if validated_data['password'] == "":
             raise serializers.ValidationError({"password": "This field is required"})
         if validated_data['password'] != validated_data['password_confirmation']:
@@ -33,7 +32,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
     def update(self, instance, validated_data):
-        print(validated_data)
         for key, value in validated_data.items():
             if key != 'image':
                 setattr(instance, key, value)

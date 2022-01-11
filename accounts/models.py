@@ -18,8 +18,8 @@ class CustomUserManager(BaseUserManager):
         user.first_name = first_name
         user.last_name = last_name
         user.set_password(password)  # change password to hash
-        # user.is_admin = False
-        # user.is_staff = False
+        user.is_admin = False
+        user.is_staff = False
         user.save(using=self._db)
         return user
 
@@ -40,8 +40,8 @@ class CustomUserManager(BaseUserManager):
         user.last_name = last_name
         user.username = username
         user.set_password(password)  # change password to hash
-        # user.is_admin = True
-        # user.is_staff = True
+        user.is_admin = True
+        user.is_staff = True
         user.save(using=self._db)
         return user
 
@@ -54,6 +54,8 @@ class CustomUser(AbstractBaseUser):
     phone_number = models.CharField(max_length=12, null=True)
     address = models.CharField(max_length=100, null=True)
     image = models.ImageField(upload_to='images',null=True)
+    is_staff = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     LEVEL_CHOICES = (
         ('level_1', 'Level 1'),
         ('level_2', 'Level 2'),
@@ -65,6 +67,14 @@ class CustomUser(AbstractBaseUser):
     REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
 
     objects = CustomUserManager()
+
+    @staticmethod
+    def has_perm(perm, obj=None):
+        return True
+
+    @staticmethod
+    def has_module_perms(app_label):
+        return True
 
     def __str__(self):
         return "{}".format(self.email)
